@@ -1,0 +1,7 @@
+objdet:
+  model: "models/yolo26n.pt"
+  conf: 0.5
+camera:
+  resolution: [640, 480]
+  format: "RGB888"
+  
