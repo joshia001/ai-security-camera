@@ -1,16 +1,14 @@
 """Live object detection on a Raspberry Pi camera using a YOLO model."""
+
 import argparse
-import sys
 from pathlib import Path
 from typing import Dict
 
 import cv2
+from cv2.typing import MatLike
 from ultralytics import YOLO
 from picamera2 import Picamera2
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-# pylint: disable=wrong-import-position
 from helpers.load_config import load_config
 
 
@@ -47,19 +45,35 @@ def initialise(config_filepath: str):
     return picam2, ncnn_model, config
 
 
+def capture(picam2: Picamera2, config: Dict[str, any]):
+    """Capture a frame."""
+    frame = picam2.capture_array()
+    if config["camera"]["flip_vertical"]:
+        frame = cv2.flip(frame, 0)
+    return frame
+
+
+def inference(frame: MatLike, model: YOLO, config: Dict[str, any]) -> list:
+    """Run inference to identify and classify objects on the frame."""
+    return model(frame, conf=config["objdet"]["conf"], verbose=False)
+
+
+def display(results: list) -> None:
+    """Display object detection results over captured frame."""
+    annotated_frame = results[0].plot()
+    cv2.imshow("Camera", annotated_frame)
+
+
 def capture_and_detect(picam2: Picamera2, model: YOLO, config: Dict):
     """Capture a frame, run inference and display the annotated result."""
     # capture frame
-    frame = picam2.capture_array()
-    frame = cv2.flip(frame, 0)
+    frame = capture(picam2)
 
     # run inference
-    results = model(frame, conf=config["objdet"]["conf"], verbose=False)
+    results = inference(frame, model, config)
 
     # visualise results on frame
-    annotated_frame = results[0].plot()
-
-    cv2.imshow("Camera", annotated_frame)
+    display(results)
 
 
 def main():

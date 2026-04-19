@@ -1,3 +1,6 @@
 venv/
 __pycache__/
 .vscode/
+*.pt
+models/yolo26n_ncnn_model/
+models/*.pt

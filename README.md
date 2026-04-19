@@ -23,7 +23,7 @@ Install the required YOLO model. You can edit `install_yolo.sh` if you would lik
 Run object detection from the repo root:
 
 ```bash
-python -m detection.detection_yolo
+python -m detection.detection_yolo --config configs/yolo_config.yaml
 ```
 
 Press `q` in the preview window to exit. Detection parameters (model path, confidence threshold) and camera settings (resolution, pixel format) can be tuned in [configs/yolo_config.yaml](configs/yolo_config.yaml).
@@ -44,6 +44,10 @@ Press `q` in the preview window to exit. Detection parameters (model path, confi
 
 ```
 security_camera/
+├── .github/
+│   └── workflows/
+│       ├── pylint.yml
+│       └── ruff.yml
 ├── configs/                  # YAML configs for detection + camera
 │   └── yolo_config.yaml
 ├── detection/                # Detection pipeline
@@ -55,7 +59,10 @@ security_camera/
 │   └── yolo26n_ncnn_model/
 ├── scripts/
 │   ├── install_yolo.sh       # Shell script to install the YOLO model
-├── requirements.txt
-└── README.md
+├── .gitignore
+├── .pylintrc
+├── README.md
+├── requirements-pi.txt       # Pi-specific libraries
+└── requirements.txt
 ```
 

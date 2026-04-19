@@ -4,4 +4,4 @@ objdet:
 camera:
   resolution: [640, 480]
   format: "RGB888"
-  
+  flip_vertical: true
