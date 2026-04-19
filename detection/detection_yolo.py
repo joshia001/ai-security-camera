@@ -1,24 +1,27 @@
-import sys
-from typing import Dict
-from pathlib import Path
+"""Live object detection on a Raspberry Pi camera using a YOLO model."""
 import argparse
-
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+import sys
+from pathlib import Path
+from typing import Dict
 
 import cv2
 from ultralytics import YOLO
 from picamera2 import Picamera2
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+# pylint: disable=wrong-import-position
 from helpers.load_config import load_config
 
 
 def initialise(config_filepath: str):
+    """Load config, prepare the YOLO model and start the Pi camera."""
     # load config
     config = load_config(config_filepath)
 
     # load the YOLO model (defined in config)
-    ROOT = Path(__file__).resolve().parents[1]
-    model_path = ROOT / config["objdet"]["model"]
+    root = Path(__file__).resolve().parents[1]
+    model_path = root / config["objdet"]["model"]
 
     # check if ncnn model already exists, if not export it
     ncnn_path = model_path.with_name(model_path.stem + "_ncnn_model")
@@ -45,6 +48,7 @@ def initialise(config_filepath: str):
 
 
 def capture_and_detect(picam2: Picamera2, model: YOLO, config: Dict):
+    """Capture a frame, run inference and display the annotated result."""
     # capture frame
     frame = picam2.capture_array()
     frame = cv2.flip(frame, 0)
@@ -59,6 +63,7 @@ def capture_and_detect(picam2: Picamera2, model: YOLO, config: Dict):
 
 
 def main():
+    """Entry point: parse args and run the detection loop."""
     parser = argparse.ArgumentParser(
         formatter_class=argparse.ArgumentDefaultsHelpFormatter
     )
