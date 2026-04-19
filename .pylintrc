@@ -1,0 +1,7 @@
+[MAIN]
+# picamera2 is Raspberry Pi-only and not installable in CI
+ignored-modules=picamera2
+
+[TYPECHECK]
+# cv2 dynamically generates members from its C extension
+generated-members=cv2.*
