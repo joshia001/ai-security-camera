@@ -67,7 +67,7 @@ def display(results: list) -> None:
 def capture_and_detect(picam2: Picamera2, model: YOLO, config: Dict):
     """Capture a frame, run inference and display the annotated result."""
     # capture frame
-    frame = capture(picam2)
+    frame = capture(picam2, config)
 
     # run inference
     results = inference(frame, model, config)
